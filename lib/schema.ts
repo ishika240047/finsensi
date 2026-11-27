@@ -10,3 +10,29 @@ export const accountSchema = z.object({
 
 export type AccountInput = z.infer<typeof accountSchema>;
 
+// Validation rules for creating a transaction
+export const transactionSchema = z
+  .object({
+    type: z.enum(["INCOME", "EXPENSE"]),
+    amount: z.string().min(1, "Amount is required"),
+    description: z.string().optional(),
+    date: z.date(),
+    accountId: z.string().min(1, "Please select an account"),
+    category: z.string().min(1, "Category is required"),
+    isRecurring: z.boolean(),
+    recurringInterval: z
+      .enum(["DAILY", "WEEKLY", "MONTHLY", "YEARLY"])
+      .optional(),
+  })
+  .superRefine((data, ctx) => {
+    // If recurring is turned on, require the user to pick an interval
+    if (data.isRecurring && !data.recurringInterval) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Recurring interval is required for recurring transactions",
+        path: ["recurringInterval"],
+      });
+    }
+  });
+
+export type TransactionInput = z.infer<typeof transactionSchema>;

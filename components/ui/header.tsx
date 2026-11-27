@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { SignInButton, Show, SignUpButton, UserButton } from "@clerk/nextjs";
 import { checkUser } from "@/lib/checkUser";
+import { Button } from "@/components/ui/button";
+import { LayoutDashboard, Plus } from "lucide-react";
 
 // Header navigation bar shown at the top of every page
 const Header = async () => {
@@ -23,8 +25,8 @@ const Header = async () => {
           />
         </Link>
 
-        {/* Show Sign In / Sign Up when logged out, and avatar when logged in */}
-        <div className="flex items-center gap-4">
+        {/* Navigation links & user controls */}
+        <div className="flex items-center gap-3">
           <Show when="signed-out">
             <SignInButton />
             <SignUpButton>
@@ -35,10 +37,24 @@ const Header = async () => {
           </Show>
 
           <Show when="signed-in">
+            <Link href="/dashboard">
+              <Button variant="outline" size="sm" className="flex items-center gap-1.5">
+                <LayoutDashboard className="h-4 w-4" />
+                <span className="hidden sm:inline">Dashboard</span>
+              </Button>
+            </Link>
+
+            <Link href="/transaction/create">
+              <Button size="sm" className="bg-purple-600 hover:bg-purple-700 text-white flex items-center gap-1.5">
+                <Plus className="h-4 w-4" />
+                <span className="hidden sm:inline">Add Transaction</span>
+              </Button>
+            </Link>
+
             <UserButton
               appearance={{
                 elements: {
-                  avatarBox: "w-10 h-10",
+                  avatarBox: "w-9 h-9",
                 },
               }}
             />

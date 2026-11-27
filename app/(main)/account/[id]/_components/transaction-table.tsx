@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import {
   ChevronDown,
@@ -61,6 +62,7 @@ const ITEMS_PER_PAGE = 10;
 
 // Interactive table displaying account transactions with search, sorting, filtering, and bulk delete
 export default function TransactionTable({ transactions }: TransactionTableProps) {
+  const router = useRouter();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [sortConfig, setSortConfig] = useState<{ field: "date" | "amount"; direction: "asc" | "desc" }>({
     field: "date",
@@ -360,6 +362,14 @@ export default function TransactionTable({ transactions }: TransactionTableProps
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onClick={() =>
+                            router.push(`/transaction/create?edit=${transaction.id}`)
+                          }
+                        >
+                          Edit
+                        </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-destructive cursor-pointer"
                           onClick={() => deleteFn([transaction.id])}
